@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">RaspyTempApp</string>
+    <string name="edit_message">Temperature</string>
+    <string name="send">Send</string>
+</resources>
