@@ -2,15 +2,20 @@ package com.example.raspytempapp;
 
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Base64;
 import android.view.View;
 import android.widget.TextView;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
+import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -24,31 +29,43 @@ public class MainActivity extends AppCompatActivity {
      * Called when the user taps the Send button
      */
     public void sendMessage(View view) {
-        // Do something in response to button
 
         final TextView textView = findViewById(R.id.editText);
-// ...
+        String setting = textView.getText().toString();
 
-// Instantiate the RequestQueue.
+        String url = "http://x.x.x.x:8000/api/set/" +setting; //TODO do not hardcode
+
+        StringRequest stringRequest = buildRequest(textView, url);
         RequestQueue queue = Volley.newRequestQueue(this);
-        String url = "http://www.google.com";
+        queue.add(stringRequest);
+    }
 
-// Request a string response from the provided URL.
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
+    private StringRequest buildRequest(final TextView textView, String url) {
+        return new StringRequest(Request.Method.GET, url,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        // Display the first 500 characters of the response string.
-                        textView.setText("Response is: " + response.substring(0, 500));
+                        textView.setText("ok");
                     }
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                textView.setText("That didn't work!");
+                if (error instanceof TimeoutError) {
+                    textView.setText("Timeout");
+                } else {
+                    textView.setText("That didn't work!");
+                }
             }
-        });
-
-// Add the request to the RequestQueue.
-        queue.add(stringRequest);
+        }) {
+            @Override
+            public Map<String, String> getHeaders() {
+                Map<String, String> headers = new HashMap<>();
+                String credentials = "x:x";//TODO do not hardcode
+                String auth = "Basic " + Base64.encodeToString(credentials.getBytes(), Base64.NO_WRAP);
+                headers.put("Content-Type", "application/json");
+                headers.put("Authorization", auth);
+                return headers;
+            }
+        };
     }
 }
