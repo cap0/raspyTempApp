@@ -41,6 +41,11 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    public void gotoView(View view) {
+        Intent intent = new Intent(this, TemperatureActivity.class);
+        startActivity(intent);
+    }
+
     public void sendMessage(View view) {
         final TextView inputTxt = findViewById(R.id.editText);
         final TextView outputTxt = findViewById(R.id.res);
@@ -67,13 +72,25 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private StringRequest buildRequest(final TextView textView, String url, final PropertyHelper p) {
-        return new StringRequest(Request.Method.GET, url,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        textView.setText("ok");
-                    }
-                }, new Response.ErrorListener() {
+        return new StringRequest(Request.Method.GET, url, buildResponseListener(textView), buildErrorListener(textView)) {
+            @Override
+            public Map<String, String> getHeaders() {
+                return buildSecurityHeader(p);
+            }
+        };
+    }
+
+    public static Map<String, String> buildSecurityHeader(PropertyHelper p) {
+        Map<String, String> headers = new HashMap<>();
+        String credentials = p.getUser()+":" +p.getPassword();
+        String auth = "Basic " + Base64.encodeToString(credentials.getBytes(), Base64.NO_WRAP);
+        headers.put("Content-Type", "application/json");
+        headers.put("Authorization", auth);
+        return headers;
+    }
+
+    public static Response.ErrorListener buildErrorListener(final TextView textView) {
+        return new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
                 if (error instanceof TimeoutError) {
@@ -82,15 +99,14 @@ public class MainActivity extends AppCompatActivity {
                     textView.setText("Fail");
                 }
             }
-        }) {
+        };
+    }
+
+    private Response.Listener<String> buildResponseListener(final TextView textView) {
+        return new Response.Listener<String>() {
             @Override
-            public Map<String, String> getHeaders() {
-                Map<String, String> headers = new HashMap<>();
-                String credentials = p.getUser()+":" +p.getPassword();
-                String auth = "Basic " + Base64.encodeToString(credentials.getBytes(), Base64.NO_WRAP);
-                headers.put("Content-Type", "application/json");
-                headers.put("Authorization", auth);
-                return headers;
+            public void onResponse(String response) {
+                textView.setText("ok");
             }
         };
     }
