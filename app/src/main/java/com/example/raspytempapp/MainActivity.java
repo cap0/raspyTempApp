@@ -1,9 +1,12 @@
 package com.example.raspytempapp;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Base64;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import com.android.volley.Request;
@@ -14,8 +17,13 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.util.HashMap;
 import java.util.Map;
+
+import static android.provider.AlarmClock.EXTRA_MESSAGE;
+import static com.example.raspytempapp.SettingsActivity.SETTINGS_FILE_NAME;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -25,22 +33,40 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
     }
 
-    /**
-     * Called when the user taps the Send button
-     */
+    public void settings(View view) {
+        Intent intent = new Intent(this, SettingsActivity.class);
+        EditText editText = findViewById(R.id.editText);
+        String message = editText.getText().toString();
+        intent.putExtra(EXTRA_MESSAGE, message);
+        startActivity(intent);
+    }
+
     public void sendMessage(View view) {
+        final TextView inputTxt = findViewById(R.id.editText);
+        final TextView outputTxt = findViewById(R.id.res);
+        outputTxt.setText("");
+        String setting = inputTxt.getText().toString();
 
-        final TextView textView = findViewById(R.id.editText);
-        String setting = textView.getText().toString();
+        PropertyHelper propertyHelper = new PropertyHelper();
+        propertyHelper.load(getFile());
 
-        String url = "http://x.x.x.x:8000/api/set/" +setting; //TODO do not hardcode
+        String url = "http://"+propertyHelper.getHost()+":8000/api/set/" +setting;
 
-        StringRequest stringRequest = buildRequest(textView, url);
+        StringRequest stringRequest = buildRequest(outputTxt, url, propertyHelper);
         RequestQueue queue = Volley.newRequestQueue(this);
         queue.add(stringRequest);
     }
 
-    private StringRequest buildRequest(final TextView textView, String url) {
+    private FileInputStream getFile() {
+        try {
+            return openFileInput(SETTINGS_FILE_NAME);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    private StringRequest buildRequest(final TextView textView, String url, final PropertyHelper p) {
         return new StringRequest(Request.Method.GET, url,
                 new Response.Listener<String>() {
                     @Override
@@ -53,14 +79,14 @@ public class MainActivity extends AppCompatActivity {
                 if (error instanceof TimeoutError) {
                     textView.setText("Timeout");
                 } else {
-                    textView.setText("That didn't work!");
+                    textView.setText("Fail");
                 }
             }
         }) {
             @Override
             public Map<String, String> getHeaders() {
                 Map<String, String> headers = new HashMap<>();
-                String credentials = "x:x";//TODO do not hardcode
+                String credentials = p.getUser()+":" +p.getPassword();
                 String auth = "Basic " + Base64.encodeToString(credentials.getBytes(), Base64.NO_WRAP);
                 headers.put("Content-Type", "application/json");
                 headers.put("Authorization", auth);
