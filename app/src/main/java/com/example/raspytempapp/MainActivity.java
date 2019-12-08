@@ -17,6 +17,9 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.HashMap;
@@ -31,7 +34,31 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        getActualTemperature();
+
     }
+
+    public void getActualTemperature() {
+        final TextView room = findViewById(R.id.roomTemp);
+        final TextView wort = findViewById(R.id.wortTemp);
+        final TextView res = findViewById(R.id.res);
+
+        final PropertyHelper propertyHelper = new PropertyHelper();
+        propertyHelper.load(getFile());
+
+        String url = "http://" + propertyHelper.getHost() + ":8000/api/temperature/";
+
+        StringRequest sr =  new StringRequest(Request.Method.GET, url, handleGetTemperatureResponse(res, room, wort), buildErrorListener(res)) {
+            @Override
+            public Map<String, String> getHeaders() {
+                return buildSecurityHeader(propertyHelper);
+            }
+        };
+
+        RequestQueue queue = Volley.newRequestQueue(this);
+        queue.add(sr);
+    }
+
 
     public void settings(View view) {
         Intent intent = new Intent(this, SettingsActivity.class);
@@ -107,6 +134,27 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onResponse(String response) {
                 textView.setText("ok");
+            }
+        };
+    }
+
+    private Response.Listener<String> handleGetTemperatureResponse(final TextView textView, final TextView room, final TextView wort) {
+        return new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                try {
+                    JSONObject jsonObject = new JSONObject(response);
+                    String r = jsonObject.getString("room");
+                    String w = jsonObject.getString("wort");
+
+                    room.setText(r);
+                    wort.setText(w);
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    textView.setText("error");
+
+                }
             }
         };
     }

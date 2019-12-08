@@ -34,10 +34,6 @@ public class TemperatureActivity extends AppCompatActivity {
         setContentView(R.layout.activity_temperature);
     }
 
-    public void back(View view) {
-        finish();
-    }
-
     public void getTemperatureSettings(View view) {
         final TextView textView = findViewById(R.id.temperature);
 

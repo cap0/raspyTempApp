@@ -6,4 +6,6 @@
     <string name="saveSettings">Save</string>
     <string name="view">View</string>
     <string name="getTemp">Temp</string>
+    <string name="roomLbl">Room</string>
+    <string name="wortLbl">Wort</string>
 </resources>
