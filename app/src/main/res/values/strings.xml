@@ -9,4 +9,18 @@
     <string name="roomLbl">Room</string>
     <string name="wortLbl">Wort</string>
     <string name="showSettings">Show Settings</string>
+    <string name="title_activity_navigation">NavigationActivity</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">Raspy Temp App</string>
+    <string name="nav_header_subtitle">Have a Brew!</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="action_settings">Settings</string>
+
+    <string name="menu_home">Home</string>
+    <string name="menu_send_data">Send</string>
+    <string name="menu_set_points">Set Points</string>
+    <string name="menu_settings">Settings</string>
+    <string name="menu_share">Share</string>
+    <string name="menu_send">Send</string>
 </resources>
