@@ -3,7 +3,7 @@ package com.example.raspytempapp;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
-import android.util.Base64;
+import android.text.method.ScrollingMovementMethod;
 import android.view.View;
 import android.widget.TextView;
 
@@ -66,7 +66,15 @@ public class TemperatureActivity extends AppCompatActivity {
             public void onResponse(String response) {
                 try {
                     JSONArray jsonObject = new JSONArray(response);
-                    textView.setText(jsonObject.toString(2));
+                    for (int i = 0; i < jsonObject.length(); i++) {
+                        JSONObject jo = (JSONObject) jsonObject.get(i);
+                        String from = jo.getString("from");
+                        String to = jo.getString("to");
+                        String value = jo.getString("value");
+                        String s = from + " - " + to + "---" +value;
+                        textView.append(s + "\n");
+                    }
+                    textView.setMovementMethod(new ScrollingMovementMethod());
                 } catch (JSONException e) {
                     e.printStackTrace();
                     textView.setText(e.getMessage());

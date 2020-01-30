@@ -2,10 +2,11 @@
     <string name="app_name">Raspy Temp App</string>
     <string name="edit_message">Temp</string>
     <string name="send">Send</string>
-    <string name="settings">Settings</string>
+    <string name="settings">App Settings</string>
     <string name="saveSettings">Save</string>
-    <string name="view">View</string>
+    <string name="view">Server Settings</string>
     <string name="getTemp">Temp</string>
     <string name="roomLbl">Room</string>
     <string name="wortLbl">Wort</string>
+    <string name="showSettings">Show Settings</string>
 </resources>
