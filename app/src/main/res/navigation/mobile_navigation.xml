@@ -13,7 +13,7 @@
 
     <fragment
         android:id="@+id/nav_gallery"
-        android:name="com.example.raspytempapp.ui.gallery.GalleryFragment"
+        android:name="com.example.raspytempapp.ui.setTemperature.TemperatureSetter"
         android:label="@string/menu_send_data"
         tools:layout="@layout/fragment_gallery" />
 

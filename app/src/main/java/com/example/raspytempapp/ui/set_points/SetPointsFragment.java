@@ -1,19 +1,26 @@
-package com.example.raspytempapp;
-
-import androidx.appcompat.app.AppCompatActivity;
+package com.example.raspytempapp.ui.set_points;
 
 import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
-import com.android.volley.TimeoutError;
-import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.raspytempapp.MainActivity;
+import com.example.raspytempapp.PropertyHelper;
+import com.example.raspytempapp.R;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -21,29 +28,40 @@ import org.json.JSONObject;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.util.HashMap;
 import java.util.Map;
 
 import static com.example.raspytempapp.SettingsActivity.SETTINGS_FILE_NAME;
 
-public class TemperatureActivity extends AppCompatActivity {
+public class SetPointsFragment extends Fragment {
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_temperature);
+    private SetPointsViewModel setPointsViewModel;
+
+    public View onCreateView(@NonNull LayoutInflater inflater,
+                             ViewGroup container, Bundle savedInstanceState) {
+        setPointsViewModel =
+                ViewModelProviders.of(this).get(SetPointsViewModel.class);
+        View root = inflater.inflate(R.layout.fragment_set_points, container, false);
+        final TextView textView = root.findViewById(R.id.text_set_points);
+        setPointsViewModel.getText().observe(this, new Observer<String>() {
+            @Override
+            public void onChanged(@Nullable String s) {
+                textView.setText(s);
+            }
+        });
+        getTemperatureSettings(root);
+        return root;
     }
 
-    public void getTemperatureSettings(View view) {
-        final TextView textView = findViewById(R.id.temperature);
+    private void getTemperatureSettings(View view) {
+        final TextView textView = view.findViewById(R.id.text_set_points);
 
         PropertyHelper propertyHelper = new PropertyHelper();
-        propertyHelper.load(getFile());
+        propertyHelper.load(getFile(view));
 
         String url = "http://" + propertyHelper.getHost() + ":8000/api/get/";
 
         StringRequest stringRequest = buildRequest(textView, url, propertyHelper);
-        RequestQueue queue = Volley.newRequestQueue(this);
+        RequestQueue queue = Volley.newRequestQueue(view.getContext());
         queue.add(stringRequest);
     }
 
@@ -85,9 +103,9 @@ public class TemperatureActivity extends AppCompatActivity {
     }
 
 
-    private FileInputStream getFile() {
+    private FileInputStream getFile(View root) {
         try {
-            return openFileInput(SETTINGS_FILE_NAME);
+            return root.getContext().openFileInput(SETTINGS_FILE_NAME);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }

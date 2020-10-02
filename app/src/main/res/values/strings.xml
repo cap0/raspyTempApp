@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Raspy Temp App</string>
+    <string name="app_name">Have a Brew</string>
     <string name="edit_message">Temp</string>
     <string name="send">Send</string>
     <string name="settings">App Settings</string>
@@ -9,7 +9,7 @@
     <string name="roomLbl">Room</string>
     <string name="wortLbl">Wort</string>
     <string name="showSettings">Show Settings</string>
-    <string name="title_activity_navigation">NavigationActivity</string>
+    <string name="title_activity_navigation">Have a Brew</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="nav_header_title">Raspy Temp App</string>

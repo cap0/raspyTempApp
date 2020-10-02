@@ -5,9 +5,9 @@ import java.io.IOException;
 import java.util.Properties;
 
 public class PropertyHelper {
-    public static final String HOST = "HOST";
-    public static final String USER = "USER";
-    public static final String PASSWORD = "PASSWORD";
+    private static final String HOST = "HOST";
+    private static final String USER = "USER";
+    private static final String PASSWORD = "PASSWORD";
 
     private Properties p;
 

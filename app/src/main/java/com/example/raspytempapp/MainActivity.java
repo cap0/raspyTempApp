@@ -69,8 +69,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void gotoView(View view) {
-        Intent intent = new Intent(this, TemperatureActivity.class);
-        startActivity(intent);
+      //  Intent intent = new Intent(this, TemperatureActivity.class);
+       // startActivity(intent);
     }
 
     public void sendMessage(View view) {

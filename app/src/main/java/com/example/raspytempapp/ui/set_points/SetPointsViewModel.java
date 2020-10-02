@@ -1,16 +1,15 @@
-package com.example.raspytempapp.ui.gallery;
+package com.example.raspytempapp.ui.set_points;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-public class GalleryViewModel extends ViewModel {
+public class SetPointsViewModel extends ViewModel {
 
     private MutableLiveData<String> mText;
 
-    public GalleryViewModel() {
+    public SetPointsViewModel() {
         mText = new MutableLiveData<>();
-        mText.setValue("This is gallery fragment");
     }
 
     public LiveData<String> getText() {

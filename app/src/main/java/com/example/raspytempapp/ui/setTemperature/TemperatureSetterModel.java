@@ -1,16 +1,16 @@
-package com.example.raspytempapp.ui.share;
+package com.example.raspytempapp.ui.setTemperature;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-public class ShareViewModel extends ViewModel {
+public class TemperatureSetterModel extends ViewModel {
 
     private MutableLiveData<String> mText;
 
-    public ShareViewModel() {
+    public TemperatureSetterModel() {
         mText = new MutableLiveData<>();
-        mText.setValue("This is share fragment");
+        mText.setValue("This is gallery fragment");
     }
 
     public LiveData<String> getText() {

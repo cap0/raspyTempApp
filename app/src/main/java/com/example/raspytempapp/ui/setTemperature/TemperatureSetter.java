@@ -1,4 +1,4 @@
-package com.example.raspytempapp.ui.gallery;
+package com.example.raspytempapp.ui.setTemperature;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -8,10 +8,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import androidx.annotation.Nullable;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.android.volley.Request;
@@ -24,9 +22,6 @@ import com.android.volley.toolbox.Volley;
 import com.example.raspytempapp.PropertyHelper;
 import com.example.raspytempapp.R;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.HashMap;
@@ -34,16 +29,15 @@ import java.util.Map;
 
 import static com.example.raspytempapp.SettingsActivity.SETTINGS_FILE_NAME;
 
-public class GalleryFragment extends Fragment {
+public class TemperatureSetter extends Fragment {
 
-    private GalleryViewModel galleryViewModel;
+    private TemperatureSetterModel temperatureSetterModel;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        galleryViewModel =
-                ViewModelProviders.of(this).get(GalleryViewModel.class);
-        View root = inflater.inflate(R.layout.fragment_gallery, container, false);
-        return root;
+        temperatureSetterModel =
+                ViewModelProviders.of(this).get(TemperatureSetterModel.class);
+        return inflater.inflate(R.layout.fragment_temperature_setter, container, false);
     }
 
     public void sendMessage(View view) {
